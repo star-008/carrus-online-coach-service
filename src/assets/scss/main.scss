@@ -1,0 +1,76 @@
+// vuetify overrides
+
+.v-card {
+  &.border {
+    border: 1px solid #ddd;
+  }
+}
+
+.v-sheet {
+  border-radius: 3px;
+}
+
+.theme--light {
+  &.v-icon {
+    color: inherit;
+  }
+  &.application {
+    background: #f8f8f8;
+  }
+}
+
+.v-badge__badge {
+  &--inline {
+    position: static;
+  }
+}
+
+// Custom
+
+a {
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.wrapper {
+  margin: 0 auto;
+  &--thin {
+    max-width: 830px;
+  }
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 1rem;
+}
+.dashboard-welcome {
+  grid-column: span 4;
+  @media (min-width: 600px) {
+    grid-column: span 2;
+  }
+}
+.dashboard-action {
+  grid-column: span 2;
+  @media (min-width: 600px) {
+    grid-column: span 1;
+  }
+}
+
+.dashboard-welcome.v-sheet {
+  background: #ffe3dc;
+}
+
+.d-flex-min {
+  display: flex;
+}
+
+.filter {
+  &--grayscale {
+    filter: grayscale(1);
+  }
+}

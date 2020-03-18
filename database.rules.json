@@ -1,0 +1,14 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "presence": {
+      ".read": "auth !== null",
+      ".indexOn": ".value",
+      "$uid": {
+        ".read": "auth !== null",
+        ".write": "auth.uid === $uid"
+      }
+    }
+  }
+}

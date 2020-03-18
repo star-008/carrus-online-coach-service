@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "carrus-dev",
+    "live": "careerup-e5810",
+    "meup": "meup-project"
+  }
+}

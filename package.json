@@ -1,0 +1,92 @@
+{
+  "name": "carrus",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "vue-cli-service build",
+    "serve": "vue-cli-service serve",
+    "serve:meup": "vue-cli-service serve --mode meup-dev",
+    "lint": "vue-cli-service lint",
+    "lint:fix": "vue-cli-service lint --fix",
+    "deploy:dev": "vue-cli-service build --mode development; firebase deploy -P default",
+    "deploy:dev:ci": "vue-cli-service build --mode development; firebase deploy -P default --token $FIREBASE_TOKEN",
+    "deploy:meup": "vue-cli-service build --mode meup; firebase deploy -P meup",
+    "deploy:meup:ci": "vue-cli-service build --mode meup; firebase deploy -P meup --token $FIREBASE_TOKEN",
+    "deploy:live": "vue-cli-service build; firebase deploy -P live",
+    "deploy:live:ci": "vue-cli-service build; firebase deploy -P live --token $FIREBASE_TOKEN"
+  },
+  "dependencies": {
+    "@typeform/embed": "^0.9.0",
+    "algoliasearch": "^3.33.0",
+    "animate.css": "^3.7.2",
+    "autosize": "^4.0.2",
+    "core-js": "^2.6.9",
+    "firebase": "^6.1.0",
+    "instantsearch.css": "^7.3.1",
+    "tiptap": "^1.19.3",
+    "tiptap-extensions": "^1.19.4",
+    "vue": "^2.6.10",
+    "vue-croppa": "^1.3.8",
+    "vue-instantsearch": "^2.1.0",
+    "vue-router": "^3.0.3",
+    "vuelidate": "^0.7.4",
+    "vuetify": "^1.5.6",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.7.0",
+    "@vue/cli-plugin-eslint": "^3.7.0",
+    "@vue/cli-service": "^3.7.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "node-sass": "^4.9.0",
+    "prettier": "^1.18.2",
+    "sass-loader": "^7.1.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.1",
+    "vue-cli-plugin-vuetify": "^0.5.0",
+    "vue-template-compiler": "^2.5.21",
+    "vuetify-loader": "^1.0.5"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true,
+      "browser": true
+    },
+    "extends": [
+      "plugin:vue/recommended",
+      "eslint:recommended",
+      "prettier/vue"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "warn",
+        {
+          "singleQuote": true,
+          "semi": false,
+          "trailingComma": "es5",
+          "htmlWhitespaceSensitivity": "ignore"
+        }
+      ]
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}

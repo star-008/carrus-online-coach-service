@@ -1,0 +1,125 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if userIsAdmin()
+    }
+
+    match /chats/{chatId} {
+    	allow read: if currentUserId() in existingState().participants
+      allow create: if currentUserId() in finalState().participants
+
+      match /messages/{messageId} {
+      	allow read, create: if currentUserId() in get(/databases/$(database)/documents/chats/$(chatId)).data.participants
+      }
+    }
+    
+    match /orders/{orderId} {
+    	allow read: if currentUserId() in existingState().participants
+
+      match /transactions/{transactionId} {
+    	  allow read: if currentUserId() in existingState().participants
+        allow update: if currentUserId() == existingState().seekerId
+          && propertyDoesntChange('charge')
+          && propertyDoesntChange('coachId')
+          && propertyDoesntChange('createdAt')
+          && propertyDoesntChange('item')
+          && propertyDoesntChange('participants')
+          && propertyDoesntChange('seekerId')
+          && propertyDoesntChange('review')
+          && propertyDoesntChange('rating')
+      }
+    }
+
+    match /requests/{requestId} {
+    	allow read: if loggedIn()
+      allow create: if finalState().seekerId == currentUserId()
+      allow update: if existingState().seekerId == currentUserId()
+    }
+
+    match /userProfiles/{userProfileId} {
+      allow read: if loggedIn();
+      allow update: if currentUserId() == userProfileId
+        && finalState().role == 'coach'
+        && propertyDoesntChange('minRate')
+        && propertyDoesntChange('numPackages')
+        && propertyDoesntChange('numRatings')
+        && propertyDoesntChange('numSessions')
+        && propertyDoesntChange('rating')
+        && propertyDoesntChange('role'); // User can't update these values
+    }
+
+    match /organizations/{organizationId} {
+      allow read: if currentUserId() in existingState().participants
+
+      match /staff/{staffId} {
+        allow read, update: if 'admin' in staffData(currentUserId()).roles
+      }
+
+      function staffData(userId) {
+        return get(/databases/$(database)/documents/organizations/$(organizationId)/staff/$(userId)).data
+      }
+    }
+
+    match /users/{userId} {
+      allow create, read: if currentUserId() == userId || userIsAdmin();
+      allow update: if
+      (currentUserId() == userId
+        &&
+          (finalState().role == 'coach'
+          && propertyDoesntChange('certified')
+          && propertyDoesntChange('accountVerified')
+          && propertyDoesntChange('numRatings')
+          && propertyDoesntChange('numSessions')
+          && propertyDoesntChange('rating')
+          && propertyDoesntChange('role'))
+        || (finalState().role == 'seeker'
+          && propertyDoesntChange('role'))
+      )
+      || userIsAdmin();
+
+      match /notifications/{notificationId} {
+        allow update, read: if currentUserId() == userId;
+      }
+
+      match /packages/{packageId} {
+        allow read: if loggedIn();
+        allow create, update: if currentUserId() == userId;
+      }
+
+      match /reviews/{reviewId} {
+        allow read: if loggedIn()
+        allow create: 
+        if orderData().seekerId == finalState().seekerId // review is by seeker
+        && orderData().coachId == userId
+        && !('rating' in orderData()) // rating already exists
+        && reviewIsValid()
+
+        function orderData() {
+          return get(/databases/$(database)/documents/orders/$(finalState().orderId)).data
+        }
+
+        function reviewIsValid() {
+          return finalState().seekerId == currentUserId()
+          && finalState().rating > 0
+          && finalState().rating <= 5
+          && finalState().review is string
+          && finalState().review.size() > 0
+        }
+      }
+    }
+
+    function userData() { return get(/databases/$(database)/documents/users/$(currentUserId())).data }
+    function userIsAdmin() { return userData().role == 'admin' }
+  }
+}
+
+function currentUser() { return request.auth; }
+function currentUserId() { return currentUser().uid; }
+function loggedIn() { return currentUserId() != null; }
+
+function existingState() { return resource.data }
+function finalState() { return request.resource.data; }
+function propertyExists(property) { return property in existingState() }
+function propertyDoesntChange(property) {
+  return !propertyExists(property) || finalState()[property] == existingState()[property] 
+}
