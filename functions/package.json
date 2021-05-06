@@ -20,7 +20,7 @@
     "node-mailjet": "^3.3.1",
     "request": "^2.88.0",
     "rollbar": "^2.12.3",
-    "sanitize-html": "^1.20.1",
+    "sanitize-html": "^2.3.2",
     "stripe": "^7.8.0"
   },
   "private": true,
